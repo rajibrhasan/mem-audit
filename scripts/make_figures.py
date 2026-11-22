@@ -91,7 +91,7 @@ def fig_disclosure(rows, out):
     ax.set_xticklabels([MODEL_LABEL[m] for m in MODEL_ORDER])
     ax.set_ylabel("Exact disclosure (%)", fontsize=24)
     ax.set_ylim(0, 108)
-    ax.set_title("Deleted-value disclosure within five queries\n(ordinary API deletion)",
+    ax.set_title("Deleted value revealed within five questions\n(API deletion, no cleanup)",
                  fontsize=22)
     ax.legend(frameon=False, fontsize=18, loc="upper right")
     style_ax(ax)
@@ -101,28 +101,28 @@ def fig_disclosure(rows, out):
     plt.close(fig)
 
 
-# ---- Figure 3: useful-memory, ordinary-cascade vs challenge-cascade ------
+# ---- Figure 3: unrelated preference kept after natural-language deletion + cascade ----
 def fig_useful(rows, out):
     fig, ax = plt.subplots(figsize=(12, 6.5))
     cols = [(m, b) for m in MODEL_ORDER for b in ("mem0", "amem")]
     x = np.arange(len(cols))
     w = 0.38
-    specs = [("normally_deleted", PALETTE["green_3"], "Ordinary (cascade)"),
-             ("partially_deleted", PALETTE["red_strong"], "Combined-summary (cascade)")]
+    specs = [("normally_deleted", PALETTE["green_3"], "Ordinary test"),
+             ("partially_deleted", PALETTE["red_strong"], "Combined-summary test")]
     for i, (state, color, label) in enumerate(specs):
         heights = []
         for m, b in cols:
             r = pick(rows, model=m, backend=b, kind="synthetic", state=state,
-                     method="natural_language", wording="direct",
+                     method="natural_language", wording="broad",
                      defense="cascade", budget=5)
             heights.append(val(r, "retained_useful_memory") if r else 0)
         ax.bar(x + (i - 0.5) * w, heights, w, color=color, label=label,
                edgecolor="black", linewidth=1.5)
     ax.set_xticks(x)
     ax.set_xticklabels([f"{m}\n{BACKEND_LABEL[b]}" for m, b in cols], fontsize=15)
-    ax.set_ylabel("Useful memory retained (%)", fontsize=24)
+    ax.set_ylabel("Preference kept (%)", fontsize=24)
     ax.set_ylim(0, 108)
-    ax.set_title("Preservation of unrelated useful memory after cleanup",
+    ax.set_title("Unrelated preference kept after deletion + cascade defense",
                  fontsize=22, pad=44)
     # Bars span the full height on most columns, so place the legend outside the
     # axes (above the plot, below the title) where it cannot overlap any bar.
@@ -159,15 +159,15 @@ def fig_auc(rows, out):
             ax.axhline(0.5, color="gray", linestyle="--", linewidth=2)
             ax.set_title(f"{BACKEND_LABEL[backend]} / "
                          f"{'no cascade' if defense == 'none' else 'cascade'}", fontsize=20)
-            ax.set_xlabel("Query budget", fontsize=20)
-            ax.set_ylabel("Prior-adjusted ROC-AUC", fontsize=20)
+            ax.set_xlabel("Questions per fact", fontsize=20)
+            ax.set_ylabel("ROC-AUC", fontsize=20)
             ax.set_ylim(-0.02, 1.04)
             ax.set_xticks(budgets)
             style_ax(ax)
     handles, labels = axes[0, 0].get_legend_handles_labels()
     fig.legend(handles, labels, loc="outside lower center", ncol=3,
                frameon=False, fontsize=18)
-    fig.suptitle("Membership-inference AUC after ordinary API deletion\n"
+    fig.suptitle("Membership-inference AUC after API deletion (0.5 = indistinguishable)\n"
                  "shading: 95% paired-fact bootstrap intervals", fontsize=22)
     for ext in ("png", "pdf"):
         fig.savefig(out / f"ordinary-api-auc.{ext}", dpi=600)
