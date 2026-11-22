@@ -38,6 +38,7 @@ BACKEND_LABEL = {"mem0": "Mem0", "amem": "A-MEM"}
 MODEL_ORDER = ["llama", "gpt-oss", "gemma"]
 MODEL_LABEL = {"llama": "Llama 3.1\n8B Instruct", "gpt-oss": "GPT-OSS\n20B",
                "gemma": "Gemma 4\n31B IT"}
+MODEL_SHORT = {"llama": "Llama", "gpt-oss": "GPT-OSS", "gemma": "Gemma"}
 MODEL_COLOR = {"llama": PALETTE["blue_main"], "gpt-oss": PALETTE["teal"],
                "gemma": PALETTE["violet"]}
 
@@ -119,7 +120,7 @@ def fig_useful(rows, out):
         ax.bar(x + (i - 0.5) * w, heights, w, color=color, label=label,
                edgecolor="black", linewidth=1.5)
     ax.set_xticks(x)
-    ax.set_xticklabels([f"{m}\n{BACKEND_LABEL[b]}" for m, b in cols], fontsize=15)
+    ax.set_xticklabels([f"{MODEL_SHORT[m]}\n{BACKEND_LABEL[b]}" for m, b in cols], fontsize=15)
     ax.set_ylabel("Preference kept (%)", fontsize=24)
     ax.set_ylim(0, 108)
     ax.set_title("Unrelated preference kept after deletion + cascade defense",
@@ -158,7 +159,7 @@ def fig_auc(rows, out):
                 ax.fill_between(xs, lo, hi, color=MODEL_COLOR[m], alpha=0.15)
             ax.axhline(0.5, color="gray", linestyle="--", linewidth=2)
             ax.set_title(f"{BACKEND_LABEL[backend]} / "
-                         f"{'no cascade' if defense == 'none' else 'cascade'}", fontsize=20)
+                         f"{'without cascade defense' if defense == 'none' else 'with cascade defense'}", fontsize=20)
             ax.set_xlabel("Questions per fact", fontsize=20)
             ax.set_ylabel("ROC-AUC", fontsize=20)
             ax.set_ylim(-0.02, 1.04)
