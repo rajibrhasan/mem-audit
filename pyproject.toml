@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mem-audit"
+version = "0.1.0"
+description = "Black-box auditing of deletion in LLM-agent persistent memory (Mem0, A-MEM)"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+native = [
+  "mem0ai==2.2.1",
+  "agentic-memory @ https://github.com/agiresearch/A-mem/archive/ceffb860f0712bbae97b184d440df62bc910ca8d.tar.gz",
+  "sentence-transformers>=5.2,<6",
+  "chromadb>=1.0,<2",
+  "qdrant-client>=1.12,<2",
+]
+plots = ["matplotlib>=3.7,<4"]
+
+[project.scripts]
+mem-audit = "memory_audit.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["memory_audit*"]

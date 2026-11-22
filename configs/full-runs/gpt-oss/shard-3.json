@@ -1,0 +1,46 @@
+{
+  "backends": [
+    "amem"
+  ],
+  "llm": {
+    "base_url": "http://127.0.0.1:18000/v1",
+    "model": "openai/gpt-oss-20b",
+    "api_key_env": "LOCAL_LLM_API_KEY",
+    "temperature": 0,
+    "reasoning_effort": "low",
+    "max_tokens": 8192,
+    "memory_max_tokens": 8192,
+    "timeout": 300,
+    "retries": 2,
+    "seed": 0
+  },
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "embedding_dims": 384,
+  "facts": 600,
+  "seeds": [
+    0
+  ],
+  "budgets": [
+    1,
+    2,
+    3,
+    5
+  ],
+  "deletion_methods": [
+    "api",
+    "natural_language"
+  ],
+  "wordings": [
+    "direct",
+    "paraphrase",
+    "broad"
+  ],
+  "defenses": [
+    "none",
+    "cascade"
+  ],
+  "retrieval_k": 5,
+  "context_chars": 6000,
+  "bootstrap": 2000,
+  "public_controls": true
+}
